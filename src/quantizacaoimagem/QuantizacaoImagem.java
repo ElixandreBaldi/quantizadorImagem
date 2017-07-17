@@ -136,22 +136,19 @@ public class QuantizacaoImagem {
                 entrada.read();
                 contOffset++;
             }
-        }
-        
-        String red = Integer.toBinaryString(entrada.read());
-        String green = Integer.toBinaryString(entrada.read());
-        String blue = Integer.toBinaryString(entrada.read());
+        }                
         int i = 0;
-        do {
-            
+        do {            
             int intRed = entrada.read();
             int intGreen = entrada.read();
             int intBlue = entrada.read();
-            if(intRed == 0 && intGreen == 0)
+            
+            if(intRed == 0 && intGreen == 0 && intBlue == -1)
                 break;
-            red = Integer.toBinaryString(intRed);
-            green = Integer.toBinaryString(intGreen);
-            blue = Integer.toBinaryString(intBlue);
+            
+            String red = Integer.toBinaryString(intRed);
+            String green = Integer.toBinaryString(intGreen);
+            String blue = Integer.toBinaryString(intBlue);
             
             img.setPixel(red, green, blue);
         }while(true);
@@ -162,9 +159,7 @@ public class QuantizacaoImagem {
     public static void salvarImagem(Imagem img) throws FileNotFoundException, IOException {
         FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM);
         
-        img.escreverNovaImagem(escreverSaida);
-        
-        
+        img.escreverNovaImagem(escreverSaida);        
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -180,6 +175,5 @@ public class QuantizacaoImagem {
         salvarImagem(img);
         
         entrada.close();
-    }
-    
+    }    
 }
