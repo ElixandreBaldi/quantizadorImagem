@@ -160,6 +160,8 @@ public class QuantizacaoImagem {
         FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM);
         
         img.escreverNovaImagem(escreverSaida);        
+        
+        escreverSaida.close();
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {

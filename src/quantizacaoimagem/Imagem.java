@@ -38,104 +38,7 @@ public class Imagem {
     
     public Imagem() {
         pixel = new ArrayList();
-    }
-
-    public void escreverNovaImagem(FileOutputStream escrever) throws IOException {
-        this.escrever = escrever;
-        
-        escreverCabecalhos();
-        escreverCores();
-    }
-    
-    private byte byteStringToByte(String bits) {
-        return (byte) Integer.parseInt(bits, 2);
-    }
-    
-    public String quebrarString (String original, int parte) {
-        String retorno = "";
-        int j = 0;
-        if(original.length() == 16 && (parte == 3 || parte == 4))
-            return "";
-        
-        if(parte == 4)
-            j = 0;        
-        else if(parte == 3)
-            j = 8;                    
-        else if(parte == 2) { 
-            if(original.length() == 16)
-                j = 0;
-            else
-                j = 16;
-        }
-        else if(parte == 1) {
-            if(original.length() == 16)
-                j = 8;
-            else
-                j = 24;
-        }
-        
-        for(int i = 0; i < 8; i++) {
-            retorno += original.charAt(j);
-            j++;
-        }
-        return retorno;        
-    }
-    
-    public void escreverCabecalhos() throws IOException {   
-        String cabecalhoBytes[] = new String[16];
-        
-        cabecalhoBytes[0] = type;
-        cabecalhoBytes[1] = size;
-        cabecalhoBytes[2] = reserved;
-        cabecalhoBytes[3] = reserved2;
-        cabecalhoBytes[4] = offsetBits;
-
-        cabecalhoBytes[5] = biSize;
-        cabecalhoBytes[6] = biWidth;
-        cabecalhoBytes[7] = biHeight;
-        cabecalhoBytes[8] = biPlanes;
-        cabecalhoBytes[9] = biBitCount;
-        cabecalhoBytes[10] = biCompression;
-        cabecalhoBytes[11] = biSizeImage;
-        cabecalhoBytes[12] = biXPelsPerMeter;
-        cabecalhoBytes[13] = biYPelsPerMeter;
-        cabecalhoBytes[14] = biClrUsed;
-        cabecalhoBytes[15] = biClrImportant; 
-        
-        
-        for(int i = 0; i < cabecalhoBytes.length; i++) {
-            String str1 = quebrarString(cabecalhoBytes[i], 1);
-            String str2 = quebrarString(cabecalhoBytes[i], 2);
-            String str3 = quebrarString(cabecalhoBytes[i], 3);
-            String str4 = quebrarString(cabecalhoBytes[i], 4);
-            
-            escrever.write(byteStringToByte(str1));
-            escrever.flush();
-            escrever.write(byteStringToByte(str2));
-            escrever.flush();
-            if(!str3.equals("")) {
-                escrever.write(byteStringToByte(str3));
-                escrever.flush();
-                escrever.write(byteStringToByte(str4));
-                escrever.flush();
-            }            
-        }
-    }
-    
-    public void escreverCores() throws IOException {
-        for(int i = 0; i < pixel.size(); i++) {
-            escrever.write(byteStringToByte(pixel.get(i).getRed()));
-            escrever.flush();
-            escrever.write(byteStringToByte(pixel.get(i).getGreen()));
-            escrever.flush();
-            escrever.write(byteStringToByte(pixel.get(i).getBlue()));
-            escrever.flush();
-        }
-        escrever.write(byteStringToByte("00000000"));
-        escrever.flush();
-        escrever.write(byteStringToByte("00000000"));
-        escrever.flush();       
-    }
+    }    
     
     public ArrayList<Cor> getPixel() {
         return pixel;
@@ -274,5 +177,100 @@ public class Imagem {
         this.biClrImportant = biClrImportant;
     }
     
+    public void escreverNovaImagem(FileOutputStream escrever) throws IOException {
+        this.escrever = escrever;
+        
+        escreverCabecalhos();
+        escreverCores();
+    }
     
+    private byte byteStringToByte(String bits) {
+        return (byte) Integer.parseInt(bits, 2);
+    }
+    
+    public String quebrarString (String original, int parte) {
+        String retorno = "";
+        int j = 0;
+        if(original.length() == 16 && (parte == 3 || parte == 4))
+            return "";
+        
+        if(parte == 4)
+            j = 0;        
+        else if(parte == 3)
+            j = 8;                    
+        else if(parte == 2) { 
+            if(original.length() == 16)
+                j = 0;
+            else
+                j = 16;
+        }
+        else if(parte == 1) {
+            if(original.length() == 16)
+                j = 8;
+            else
+                j = 24;
+        }
+        
+        for(int i = 0; i < 8; i++) {
+            retorno += original.charAt(j);
+            j++;
+        }
+        return retorno;        
+    }
+    
+    public void escreverCabecalhos() throws IOException {   
+        String cabecalhoBytes[] = new String[16];
+        
+        cabecalhoBytes[0] = type;
+        cabecalhoBytes[1] = size;
+        cabecalhoBytes[2] = reserved;
+        cabecalhoBytes[3] = reserved2;
+        cabecalhoBytes[4] = offsetBits;
+
+        cabecalhoBytes[5] = biSize;
+        cabecalhoBytes[6] = biWidth;
+        cabecalhoBytes[7] = biHeight;
+        cabecalhoBytes[8] = biPlanes;
+        cabecalhoBytes[9] = biBitCount;
+        cabecalhoBytes[10] = biCompression;
+        cabecalhoBytes[11] = biSizeImage;
+        cabecalhoBytes[12] = biXPelsPerMeter;
+        cabecalhoBytes[13] = biYPelsPerMeter;
+        cabecalhoBytes[14] = biClrUsed;
+        cabecalhoBytes[15] = biClrImportant; 
+        
+        
+        for(int i = 0; i < cabecalhoBytes.length; i++) {
+            String str1 = quebrarString(cabecalhoBytes[i], 1);
+            String str2 = quebrarString(cabecalhoBytes[i], 2);
+            String str3 = quebrarString(cabecalhoBytes[i], 3);
+            String str4 = quebrarString(cabecalhoBytes[i], 4);
+            
+            escrever.write(byteStringToByte(str1));
+            escrever.flush();
+            escrever.write(byteStringToByte(str2));
+            escrever.flush();
+            if(!str3.equals("")) {
+                escrever.write(byteStringToByte(str3));
+                escrever.flush();
+                escrever.write(byteStringToByte(str4));
+                escrever.flush();
+            }            
+        }
+    }
+    
+    public void escreverCores() throws IOException {
+        for(int i = 0; i < pixel.size(); i++) {
+            escrever.write(byteStringToByte(pixel.get(i).getRed()));
+            escrever.flush();
+            escrever.write(byteStringToByte(pixel.get(i).getGreen()));
+            escrever.flush();
+            escrever.write(byteStringToByte(pixel.get(i).getBlue()));
+            escrever.flush();
+        }
+        escrever.write(byteStringToByte("00000000"));
+        escrever.flush();
+        escrever.write(byteStringToByte("00000000"));
+        escrever.flush();       
+    }    
 }
