@@ -122,10 +122,19 @@ public class Imagem {
         }
     }
     
-    public void escreverCores() {
+    public void escreverCores() throws IOException {
         for(int i = 0; i < pixel.size(); i++) {
-            pixel.
+            escrever.write(byteStringToByte(pixel.get(i).getRed()));
+            escrever.flush();
+            escrever.write(byteStringToByte(pixel.get(i).getGreen()));
+            escrever.flush();
+            escrever.write(byteStringToByte(pixel.get(i).getBlue()));
+            escrever.flush();
         }
+        escrever.write(byteStringToByte("00000000"));
+        escrever.flush();
+        escrever.write(byteStringToByte("00000000"));
+        escrever.flush();       
     }
     
     public ArrayList<Cor> getPixel() {
