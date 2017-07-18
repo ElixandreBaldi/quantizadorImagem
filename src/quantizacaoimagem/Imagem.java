@@ -273,4 +273,41 @@ public class Imagem {
         escrever.write(byteStringToByte("00000000"));
         escrever.flush();       
     }    
+    
+    ///12345678
+    ///12345000
+    
+    //000000000
+    public static String truncarString(String palavra, int limite) {
+        //System.out.println("palavara="+palavra);
+        String palavraTruncada = "";
+        for(int i = 0; i < limite; i++) {
+            if (i<palavra.length())
+            palavraTruncada += palavra.charAt(i);
+            else
+            palavraTruncada += "0";
+        }
+        
+        while(palavraTruncada.length() < 8) {
+            palavraTruncada += "0";
+        }
+        
+        return palavraTruncada;
+    }
+    
+    public void quantizar() {
+        int j = 1;
+        for(int i = 0; i < pixel.size(); i++) {
+            String r = pixel.get(i).getRed();
+            String g = pixel.get(i).getGreen();
+            String b = pixel.get(i).getBlue();
+            
+            pixel.set(i, new Cor(truncarString(r, 5), truncarString(g, 6), truncarString(b, 5)));
+        }
+    }
+    
+    public static void main(String args[]){
+        String t1 = "12345678";
+        System.out.println(Imagem.truncarString(t1, 5));
+    }
 }

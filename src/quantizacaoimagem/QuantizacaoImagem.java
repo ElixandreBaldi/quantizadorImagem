@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import static sun.text.normalizer.UTF16.append;
 
 /**
  *
@@ -118,6 +117,9 @@ public class QuantizacaoImagem {
     public static int binarioParaDecimal(String palavra) {
         int decimal = 0;
         int soma = 1;
+        if (palavra==null){
+            System.out.println("NULL");
+        }
         for(int i = palavra.length()-1; i >= 0; i--) {
             if(palavra.charAt(i) == '1')
                 decimal += soma;
@@ -156,25 +158,34 @@ public class QuantizacaoImagem {
         return img;
     }
     
-    public static void salvarImagem(Imagem img) throws FileNotFoundException, IOException {
-        FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM);
+    public static void salvarImagem(Imagem img,String sufixo) throws FileNotFoundException, IOException {
+        FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM+sufixo);
         
         img.escreverNovaImagem(escreverSaida);        
         
         escreverSaida.close();
     }
-    
+        
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // TODO code application logic here
         setarIntervalos();
         InputStream entrada = new FileInputStream(CAMINHOIMAGEM);
         Imagem img = new Imagem();
+        //Imagem imgOriginal = new Imagem();
         
         img = setarCabecalhos(img, entrada);
         
         img = setarCores(img, entrada);
+ 
+        entrada = new FileInputStream(CAMINHOIMAGEM);
+        //imgOriginal = setarCabecalhos(imgOriginal, entrada);
         
-        salvarImagem(img);
+        //imgOriginal = setarCores(imgOriginal, entrada);
+        
+        img.quantizar();
+        
+        salvarImagem(img,"modificada");
+        //salvarImagem(imgOriginal,"original");
         
         entrada.close();
     }    
