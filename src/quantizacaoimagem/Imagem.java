@@ -44,8 +44,8 @@ public class Imagem {
         return pixel;
     }
 
-    public void setPixel(String red, String green, String blue) {
-        pixel.add(new Cor(red, green, blue));
+    public void setPixel(String red, String green, String blue,String Msg) {
+        pixel.add(new Cor(red, green, blue,Msg));
     }
     
     
@@ -302,7 +302,7 @@ public class Imagem {
             String g = pixel.get(i).getGreen();
             String b = pixel.get(i).getBlue();
             
-            pixel.set(i, new Cor(truncarString(r, 5), truncarString(g, 6), truncarString(b, 5)));
+            pixel.set(i, new Cor(truncarString(r, 5), truncarString(g, 6), truncarString(b, 5),"Quantizacao"));
         }
     }
     

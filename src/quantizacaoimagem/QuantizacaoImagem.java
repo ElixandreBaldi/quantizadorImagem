@@ -5,6 +5,7 @@
  */
 package quantizacaoimagem;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,10 +21,20 @@ public class QuantizacaoImagem {
     public static final String CAMINHONOVAIMAGEM = "/home/elixandrebaldi/Documentos/PID/quantizacaoImagem/exemplos/img1_novo.bmp";
     public static final int INTERVALOS[] = new int[16];
     public static int iIntervalos = 0;
+    private Imagem imgBuffer = null;
     /**
      * @param args the command line arguments
      */
-    public static void setarIntervalos() {
+    
+    public QuantizacaoImagem(){
+        
+    }
+    
+    public QuantizacaoImagem(File file) throws IOException{
+        startImagem(file);
+    }
+    
+    public void setarIntervalos() {
         INTERVALOS[0] = 2;
         INTERVALOS[1] = 4;
         INTERVALOS[2] = 2;
@@ -42,14 +53,15 @@ public class QuantizacaoImagem {
         INTERVALOS[15] = 4;
     }
     
-    public static String verificaLargura(String valor, int largura){
+    public String verificaLargura(String valor, int largura){
         while(valor.length() < largura) {
             valor = "0"+valor;
         }   
         return valor;
     }
     
-    public static Imagem setarCabecalhos(Imagem img, InputStream entrada) throws IOException {
+    public Imagem setarCabecalhos(Imagem img, InputStream entrada) throws IOException {
+        System.out.println("SETANDO INTERVALOS");
         while(iIntervalos < INTERVALOS.length){
             String variavelCorrente = "";
             for(int i = 0; i < INTERVALOS[iIntervalos]; i++) {            
@@ -111,6 +123,7 @@ public class QuantizacaoImagem {
             }
             iIntervalos++;
         }        
+        System.out.println("FIM SETANDO INTERVALOS");
         return img;
     }
     
@@ -129,18 +142,28 @@ public class QuantizacaoImagem {
         return decimal;
     }
     
-    public static Imagem setarCores(Imagem img, InputStream entrada) throws IOException {        
+    public static Imagem setarCores(Imagem img, InputStream entrada) throws IOException {  
+        System.out.println("INICIO SETAR CORES");
+        int imagemWidth = binarioParaDecimal(img.getBiWidth());
+        int imagemHeight = binarioParaDecimal(img.getBiHeight());
+        int numeroDePixels = imagemWidth*imagemHeight;
+        System.out.println("Imagem W : "+imagemWidth+",Imagem H : "+imagemHeight);
         int contOffset = 54;
         int offsetBits = binarioParaDecimal(img.getOffsetBits());
+        
+        int pixelsVazios = imagemWidth%4;
+        
+        System.out.println("Espacos vazios : " + pixelsVazios);
         
         if(contOffset != offsetBits) {
             while(contOffset < offsetBits) {
                 entrada.read();
                 contOffset++;
             }
-        }                
-        int i = 0;
-        do {            
+        }
+        int contadorDeLinha = 0;
+        int contadorLinhasLidas = 0;
+        for (int j=0;j<numeroDePixels;j++){         
             int intRed = entrada.read();
             int intGreen = entrada.read();
             int intBlue = entrada.read();
@@ -151,31 +174,70 @@ public class QuantizacaoImagem {
             String red = Integer.toBinaryString(intRed);
             String green = Integer.toBinaryString(intGreen);
             String blue = Integer.toBinaryString(intBlue);
-            
-            img.setPixel(red, green, blue);
-        }while(true);
-        
+            //System.out.println("ID="+j+",Coluna="+contadorLinhasLidas+",valorRed que eh blue="+blue);
+            if (contadorDeLinha>=imagemWidth-1){
+                for (int i=0;i<pixelsVazios;i++){
+                    entrada.read();
+                }
+                contadorLinhasLidas++;
+                contadorDeLinha = -1;
+            }
+            img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
+            contadorDeLinha = contadorDeLinha +1;
+        }
+        System.out.println("Linhas lidas = " + contadorLinhasLidas);
+        System.out.println("FIM SETAR CORES");
         return img;
     }
     
-    public static void salvarImagem(Imagem img,String sufixo) throws FileNotFoundException, IOException {
+    public void salvarImagem(Imagem img,String sufixo) throws FileNotFoundException, IOException {
         FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM+sufixo);
         
         img.escreverNovaImagem(escreverSaida);        
         
         escreverSaida.close();
     }
-        
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        // TODO code application logic here
+    
+    public void startImagem(File file) throws FileNotFoundException, IOException{
+        System.out.println("INICIO START IMAGEM");
         setarIntervalos();
-        InputStream entrada = new FileInputStream(CAMINHOIMAGEM);
+        InputStream entrada = new FileInputStream(file);
         Imagem img = new Imagem();
         //Imagem imgOriginal = new Imagem();
         
         img = setarCabecalhos(img, entrada);
         
         img = setarCores(img, entrada);
+        //imgOriginal = setarCabecalhos(imgOriginal, entrada);
+        
+        //imgOriginal = setarCores(imgOriginal, entrada);
+        
+        //img.quantizar();
+        
+        //salvarImagem(img,"modificada");
+        //salvarImagem(imgOriginal,"original");
+        
+        entrada.close();
+        imgBuffer = img;
+        System.out.println("FIM START IMAGEM");
+    }
+    
+    public Imagem getImagem(){
+        return(imgBuffer);
+    }
+        
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+        // TODO code application logic here
+        /*
+        QuantizacaoImagem quantiza = new QuantizacaoImagem();
+        quantiza.setarIntervalos();
+        InputStream entrada = new FileInputStream(CAMINHOIMAGEM);
+        Imagem img = new Imagem();
+        //Imagem imgOriginal = new Imagem();
+        
+        img = quantiza.setarCabecalhos(img, entrada);
+        
+        img = quantiza.setarCores(img, entrada);
  
         entrada = new FileInputStream(CAMINHOIMAGEM);
         //imgOriginal = setarCabecalhos(imgOriginal, entrada);
@@ -184,9 +246,12 @@ public class QuantizacaoImagem {
         
         img.quantizar();
         
-        salvarImagem(img,"modificada");
+        quantiza.salvarImagem(img,"modificada");
         //salvarImagem(imgOriginal,"original");
         
         entrada.close();
+        */
+        int v = binarioParaDecimal("0");
+        System.out.println("RESUL="+v);
     }    
 }
