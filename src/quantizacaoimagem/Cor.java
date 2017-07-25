@@ -17,9 +17,29 @@ public class Cor {
     private String blue;
 
     public Cor(String red, String green, String blue,String msg) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        //System.out.println("Entrada ="+red+","+green+","+blue);
+        String zeros = "";
+        int dif = 0;
+        dif = 8-red.length();
+        for (int i=0;i<dif;i++){
+            zeros = zeros+"0";
+        }
+        this.red = zeros+red;
+        zeros = "";
+        dif = 0;
+        dif = 8-green.length();
+        for (int i=0;i<dif;i++){
+            zeros = zeros+"0";
+        }
+        this.green = zeros+green;
+        zeros = "";
+        dif = 0;
+        dif = 8-blue.length();
+        for (int i=0;i<dif;i++){
+            zeros = zeros+"0";
+        }
+        this.blue = zeros+blue;
+        //System.out.println("Saida ="+this.red+","+this.green+","+this.blue);
         testValues(msg);
     }
     
@@ -67,9 +87,9 @@ public class Cor {
     }
     
     public Color getValorCor(){
-        int valorRed = binarioParaDecimal(blue);
+        int valorRed = binarioParaDecimal(red);
         int valorGreen = binarioParaDecimal(green);
-        int valorBlue = binarioParaDecimal(red);
+        int valorBlue = binarioParaDecimal(blue);
         Color corRetorno = new Color(valorRed,valorGreen,valorBlue);
         return(corRetorno);
     }

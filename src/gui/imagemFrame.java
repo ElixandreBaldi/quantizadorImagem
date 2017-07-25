@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
+import javax.swing.JFrame;
 import quantizacaoimagem.Cor;
 import quantizacaoimagem.Imagem;
 import quantizacaoimagem.QuantizacaoImagem;
@@ -29,12 +30,14 @@ public class imagemFrame extends javax.swing.JFrame {
      */
     public imagemFrame(File file) {
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         try{
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setPreferredSize(dim);
             this.pack();
             QuantizacaoImagem qI = new QuantizacaoImagem(file);
             Imagem img = qI.getImagem();
+            img.quantizar();
             List< Cor > pixels = img.getPixel();
             for (int i=0;i<pixels.size();i++){
                 //System.out.println("Cor em " + i + "=" + pixels.get(i).toString());

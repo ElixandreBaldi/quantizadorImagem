@@ -163,14 +163,10 @@ public class QuantizacaoImagem {
         }
         int contadorDeLinha = 0;
         int contadorLinhasLidas = 0;
-        for (int j=0;j<numeroDePixels;j++){         
-            int intRed = entrada.read();
-            int intGreen = entrada.read();
+        for (int j=0;j<numeroDePixels;j++){
             int intBlue = entrada.read();
-            
-            if(intRed == 0 && intGreen == 0 && intBlue == -1)
-                break;
-            
+            int intGreen = entrada.read();
+            int intRed = entrada.read();
             String red = Integer.toBinaryString(intRed);
             String green = Integer.toBinaryString(intGreen);
             String blue = Integer.toBinaryString(intBlue);
