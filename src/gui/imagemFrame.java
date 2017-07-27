@@ -7,7 +7,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,19 +15,19 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import quantizacaoimagem.Cor;
 import quantizacaoimagem.Imagem;
 import quantizacaoimagem.QuantizacaoImagem;
 import static quantizacaoimagem.QuantizacaoImagem.CAMINHONOVAIMAGEM;
-import static quantizacaoimagem.QuantizacaoImagem.binarioParaDecimal;
 
 /**
  *
  * @author FREE
  */
 public class imagemFrame extends javax.swing.JFrame {
-    private BufferedImage buffer = null;
     
     /**
      * Creates new form imagemFrame
@@ -36,45 +36,10 @@ public class imagemFrame extends javax.swing.JFrame {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         try{
-            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-            this.setPreferredSize(dim);
+            this.setLayout(new FlowLayout(FlowLayout.CENTER));
+            JPanel panel = new imagemPanel(file);
+            this.add(panel);
             this.pack();
-            QuantizacaoImagem qI = new QuantizacaoImagem(file);
-            Imagem img = qI.getImagem();
-            img.quantizar(); 
-            salvarImagem(img);
-            List< Cor > pixels = img.getPixel();
-            for (int i=0;i<pixels.size();i++){
-                //System.out.println("Cor em " + i + "=" + pixels.get(i).toString());
-            }
-            int imagemWidth = QuantizacaoImagem.binarioParaDecimal(img.getBiWidth());
-            int imagemHeight = QuantizacaoImagem.binarioParaDecimal(img.getBiHeight());
-            int quantiaPixels = imagemWidth*imagemHeight;
-            
-            int frameWidth = this.getSize().width;
-            int frameHeight = this.getSize().height;
-            BufferedImage quadro = new BufferedImage(frameWidth,frameHeight,BufferedImage.TYPE_INT_ARGB);
-
-            for (int i=0;i<frameHeight;i++)
-            {
-                int i2 = imagemHeight-i-1;
-                for (int j=0;j<frameWidth;j++){
-                    int corPreencher = Color.OPAQUE;
-                    if (!(pixels==null)){
-                        if (i<imagemHeight && j<imagemWidth){
-                            int pos = i2*imagemWidth + j;
-                            //System.out.println("i="+i+",j="+j+",pos = " + pos);
-                            Cor corRelativa = pixels.get(pos);
-                            Color corNoPixel = corRelativa.getValorCor();
-                            //System.out.println("Valor em " + pos + "="+corNoPixel.toString());
-                            corPreencher = corNoPixel.getRGB();
-                            //System.out.println("Escrevendo em " + j + ","+i+"=" + (new Color(corPreencher)).toString());
-                        }
-                    }
-                    quadro.setRGB(j, i, corPreencher);
-                }
-            }
-            buffer = quadro;
             //this.setPreferredSize(new Dimension(imagemWidth,imagemHeight));
             //this.pack();
             System.out.println("FIM CONSTRUTOR");
@@ -90,15 +55,6 @@ public class imagemFrame extends javax.swing.JFrame {
         img.escreverNovaImagem(escreverSaida);        
         
         escreverSaida.close();
-    }
-    
-    @Override
-    public void paint(Graphics g)
-    {
-        if (!(buffer==null)){
-            //System.out.println("DRAWING");
-            g.drawImage(buffer, 20, 50, this);
-        }
     }
     
     
