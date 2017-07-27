@@ -11,11 +11,15 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.JFrame;
 import quantizacaoimagem.Cor;
 import quantizacaoimagem.Imagem;
 import quantizacaoimagem.QuantizacaoImagem;
+import static quantizacaoimagem.QuantizacaoImagem.CAMINHONOVAIMAGEM;
 import static quantizacaoimagem.QuantizacaoImagem.binarioParaDecimal;
 
 /**
@@ -37,7 +41,8 @@ public class imagemFrame extends javax.swing.JFrame {
             this.pack();
             QuantizacaoImagem qI = new QuantizacaoImagem(file);
             Imagem img = qI.getImagem();
-            img.quantizar();
+            img.quantizar(); 
+            salvarImagem(img);
             List< Cor > pixels = img.getPixel();
             for (int i=0;i<pixels.size();i++){
                 //System.out.println("Cor em " + i + "=" + pixels.get(i).toString());
@@ -77,6 +82,14 @@ public class imagemFrame extends javax.swing.JFrame {
             System.err.println("ERRO EM IMAGEMFRAME");
             e.printStackTrace();
         }
+    }
+    
+    public void salvarImagem(Imagem img) throws FileNotFoundException, IOException {
+        FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM);
+        
+        img.escreverNovaImagem(escreverSaida);        
+        
+        escreverSaida.close();
     }
     
     @Override

@@ -18,7 +18,7 @@ import java.io.InputStream;
  */
 public class QuantizacaoImagem {
     public static final String CAMINHOIMAGEM = "/home/elixandrebaldi/Documentos/PID/quantizacaoImagem/exemplos/img1.bmp";
-    public static final String CAMINHONOVAIMAGEM = "/home/elixandrebaldi/Documentos/PID/quantizacaoImagem/exemplos/img1_novo.bmp";
+    public static final String CAMINHONOVAIMAGEM = "/home/elixandrebaldi/Documentos/PID/quantizadorImagem/Images/img1_novo.bmp";
     public static final int INTERVALOS[] = new int[16];
     public static int iIntervalos = 0;
     private Imagem imgBuffer = null;

@@ -232,7 +232,7 @@ public class Imagem {
         cabecalhoBytes[7] = biHeight;
         cabecalhoBytes[8] = biPlanes;
         cabecalhoBytes[9] = biBitCount;
-        cabecalhoBytes[10] = biCompression;
+        cabecalhoBytes[10] = biCompression;        
         cabecalhoBytes[11] = biSizeImage;
         cabecalhoBytes[12] = biXPelsPerMeter;
         cabecalhoBytes[13] = biYPelsPerMeter;
@@ -259,14 +259,37 @@ public class Imagem {
         }
     }
     
+    public String juntarCores(String pri, String seg, int escolha) {
+        String strRetorno = "";
+        if(escolha == 1) {
+            for(int i = 0; i < 5; i++)
+                strRetorno += pri.charAt(i);
+            for(int i = 0; i < 3; i++)
+                strRetorno += seg.charAt(i);
+        } else if(escolha == 2) {
+            for(int i = 0; i < 3; i++)
+                strRetorno += pri.charAt(i);
+            for(int i = 0; i < 6; i++)
+                strRetorno += seg.charAt(i);
+        }
+        return strRetorno;
+    }
+    
     public void escreverCores() throws IOException {
         for(int i = 0; i < pixel.size(); i++) {
-            escrever.write(byteStringToByte(pixel.get(i).getRed()));
+            String blue = pixel.get(i).getBlue();
+            String green = pixel.get(i).getGreen();
+            String red = pixel.get(i).getRed();
+            
+            String primeiroByte = juntarCores(blue, green, 1);
+            String segundoByte = juntarCores(green, red, 2);
+            
+            
+            escrever.write(byteStringToByte(primeiroByte));
+            escrever.flush();            
+            escrever.write(byteStringToByte(segundoByte));
             escrever.flush();
-            escrever.write(byteStringToByte(pixel.get(i).getGreen()));
-            escrever.flush();
-            escrever.write(byteStringToByte(pixel.get(i).getBlue()));
-            escrever.flush();
+            
         }
         escrever.write(byteStringToByte("00000000"));
         escrever.flush();
