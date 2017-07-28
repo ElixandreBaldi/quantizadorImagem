@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/elixandrebaldi/Documentos/PID/quantizadorImagem/src/quantizacaoimagem/Imagem.java</file>
-            <file>file:/home/elixandrebaldi/Documentos/PID/quantizadorImagem/src/gui/imagemPanel.java</file>
-            <file>file:/home/elixandrebaldi/Documentos/PID/quantizadorImagem/src/quantizacaoimagem/Cor.java</file>
-            <file>file:/home/elixandrebaldi/Documentos/PID/quantizadorImagem/src/gui/imagemFrame.java</file>
-            <file>file:/home/elixandrebaldi/Documentos/PID/quantizadorImagem/src/gui/CarregarView.java</file>
+            <file>file:/C:/Users/FREE/Desktop/PIDStuff/PidQuantizador/quantizadorImagem/src/quantizacaoimagem/Cor.java</file>
+            <file>file:/C:/Users/FREE/Desktop/PIDStuff/PidQuantizador/quantizadorImagem/src/CarregarView.java</file>
+            <file>file:/C:/Users/FREE/Desktop/PIDStuff/PidQuantizador/quantizadorImagem/src/gui/imagemPanel.java</file>
+            <file>file:/C:/Users/FREE/Desktop/PIDStuff/PidQuantizador/quantizadorImagem/src/quantizacaoimagem/Imagem.java</file>
         </group>
     </open-files>
 </project-private>

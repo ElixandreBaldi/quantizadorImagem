@@ -22,6 +22,7 @@ import quantizacaoimagem.QuantizacaoImagem;
  */
 public class imagemPanel extends javax.swing.JPanel {
     private BufferedImage buffer = null;
+    private Imagem bufferedImagem= null;
     /**
      * Creates new form imagemPanel
      */
@@ -30,12 +31,65 @@ public class imagemPanel extends javax.swing.JPanel {
         changeImage(file);
     }
     
+    public void quantizar(){
+        if (!(bufferedImagem==null)){
+            System.out.println("quantizando chamado");
+            bufferedImagem.quantizar();
+            updateBufferImage(bufferedImagem);
+            System.out.println("fim quantizando");
+        }
+    }
+    
+    public void subtrair(Imagem img){
+        if (!(bufferedImagem==null)){
+            System.out.println("quantizando chamado");
+            bufferedImagem.subtrair(img);
+            updateBufferImage(bufferedImagem);
+            System.out.println("fim subtraindo");
+        }
+    }
+    
+    private void updateBufferImage(Imagem img){
+        List< Cor > pixels = img.getPixel();
+        for (int i=0;i<pixels.size();i++){
+            //System.out.println("Cor em " + i + "=" + pixels.get(i).toString());
+        }
+        int imagemWidth = QuantizacaoImagem.binarioParaDecimal(img.getBiWidth());
+        int imagemHeight = QuantizacaoImagem.binarioParaDecimal(img.getBiHeight());
+        int quantiaPixels = imagemWidth*imagemHeight;
+        
+        BufferedImage quadro = new BufferedImage(imagemWidth,imagemHeight,BufferedImage.TYPE_INT_ARGB);
+        buffer = quadro;
+
+        for (int i=0;i<imagemHeight;i++)
+        {
+            int i2 = imagemHeight-i-1;
+            for (int j=0;j<imagemWidth;j++){
+                int corPreencher = Color.OPAQUE;
+                if (!(pixels==null)){
+                    if (i<imagemHeight && j<imagemWidth){
+                        int pos = i2*imagemWidth + j;
+                        //System.out.println("i="+i+",j="+j+",pos = " + pos);
+                        Cor corRelativa = pixels.get(pos);
+                        Color corNoPixel = corRelativa.getValorCor();
+                        //System.out.println("Valor em " + pos + "="+corNoPixel.toString());
+                        corPreencher = corNoPixel.getRGB();
+                        //System.out.println("Escrevendo em " + j + ","+i+"=" + (new Color(corPreencher)).toString());
+                    }
+                }
+                quadro.setRGB(j, i, corPreencher);
+            }
+        }
+        this.repaint();
+        System.out.println("fim setter image");
+    }
+    
     public void changeImage(File file){
        try{
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         QuantizacaoImagem qI = new QuantizacaoImagem(file);
         Imagem img = qI.getImagem(); 
-      
+        bufferedImagem = img;
         //salvarImagem(img);
         List< Cor > pixels = img.getPixel();
         for (int i=0;i<pixels.size();i++){
@@ -84,6 +138,10 @@ public class imagemPanel extends javax.swing.JPanel {
             //System.out.println("DRAWING");
             g.drawImage(buffer, 20, 50, this);
         }
+    }
+    
+    public Imagem getImagem(){
+        return(bufferedImagem);
     }
 
     /**

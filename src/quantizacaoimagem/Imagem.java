@@ -8,6 +8,7 @@ package quantizacaoimagem;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import static quantizacaoimagem.QuantizacaoImagem.binarioParaDecimal;
 
 /**
  *
@@ -32,7 +33,7 @@ public class Imagem {
     private String biClrUsed;
     private String biClrImportant;    
     
-    private ArrayList<Cor> pixel;   
+    private ArrayList<Cor> pixel;
 
     private FileOutputStream escrever;
     
@@ -42,6 +43,15 @@ public class Imagem {
     
     public ArrayList<Cor> getPixel() {
         return pixel;
+    }
+    
+    public void subtrair(Imagem outraimagem){
+        ArrayList<Cor> newCorArray = new ArrayList<>();
+        for (int i=0;i<pixel.size();i++){
+            Cor cor = pixel.get(i).subtrair( outraimagem.getPixel().get(i) );
+            newCorArray.add(cor);
+        }
+        this.pixel = newCorArray;
     }
 
     public void setPixel(String red, String green, String blue,String Msg) {
@@ -184,6 +194,11 @@ public class Imagem {
         escreverCores();
     }
     
+    public void escreverNovaImagem24Bits(FileOutputStream escrever)throws IOException {
+        escreverCabecalhos(escrever);
+        escreverCores24bits(escrever);
+    }
+    
     private byte byteStringToByte(String bits) {
         return (byte) Integer.parseInt(bits, 2);
     }
@@ -216,6 +231,47 @@ public class Imagem {
             j++;
         }
         return retorno;        
+    }
+    
+    public void escreverCabecalhos(FileOutputStream escrever) throws IOException {   
+        String cabecalhoBytes[] = new String[16];
+        
+        cabecalhoBytes[0] = type;
+        cabecalhoBytes[1] = size;
+        cabecalhoBytes[2] = reserved;
+        cabecalhoBytes[3] = reserved2;
+        cabecalhoBytes[4] = offsetBits;
+
+        cabecalhoBytes[5] = biSize;
+        cabecalhoBytes[6] = biWidth;
+        cabecalhoBytes[7] = biHeight;
+        cabecalhoBytes[8] = biPlanes;
+        cabecalhoBytes[9] = biBitCount;
+        cabecalhoBytes[10] = biCompression;        
+        cabecalhoBytes[11] = biSizeImage;
+        cabecalhoBytes[12] = biXPelsPerMeter;
+        cabecalhoBytes[13] = biYPelsPerMeter;
+        cabecalhoBytes[14] = biClrUsed;
+        cabecalhoBytes[15] = biClrImportant; 
+        
+        
+        for(int i = 0; i < cabecalhoBytes.length; i++) {
+            String str1 = quebrarString(cabecalhoBytes[i], 1);
+            String str2 = quebrarString(cabecalhoBytes[i], 2);
+            String str3 = quebrarString(cabecalhoBytes[i], 3);
+            String str4 = quebrarString(cabecalhoBytes[i], 4);
+            
+            escrever.write(byteStringToByte(str1));
+            escrever.flush();
+            escrever.write(byteStringToByte(str2));
+            escrever.flush();
+            if(!str3.equals("")) {
+                escrever.write(byteStringToByte(str3));
+                escrever.flush();
+                escrever.write(byteStringToByte(str4));
+                escrever.flush();
+            }            
+        }
     }
     
     public void escreverCabecalhos() throws IOException {   
@@ -273,6 +329,47 @@ public class Imagem {
                 strRetorno += seg.charAt(i);
         }
         return strRetorno;
+    }
+    
+    public void escreverCores24bits(FileOutputStream escrever) throws IOException {
+        int imagemWidth = binarioParaDecimal(biWidth);
+        int imagemHeight = binarioParaDecimal(biHeight);
+        int pixelsVazios = imagemWidth%4;
+        System.out.println("pixelsVazios : "+pixelsVazios);
+        int contadorDeLinha = 0;
+        int contadorLinhasLidas = 0;
+        
+        String emptyString = "00000000";
+        
+        int quantiaPixels = imagemWidth*imagemHeight;
+        System.out.println(pixel.size()+"="+quantiaPixels);
+        
+        for(int i = 0; i < pixel.size(); i++) {
+            String blue = pixel.get(i).getBlue();
+            String green = pixel.get(i).getGreen();
+            String red = pixel.get(i).getRed();
+
+            String primeiroByte = juntarCores(blue, green, 1);
+            String segundoByte = juntarCores(green, red, 2);
+
+
+            escrever.write(byteStringToByte(blue));           
+            escrever.write(byteStringToByte(green));
+            escrever.write(byteStringToByte(red));
+           
+            //System.out.println("writing linha");
+             
+            if (contadorDeLinha>=imagemWidth-1){
+                //System.out.println("write espaço vazio");
+                for (int j=0;j<pixelsVazios;j++){
+                    escrever.write(byteStringToByte(emptyString));
+                }
+                contadorLinhasLidas++;
+                contadorDeLinha = -1;
+            }
+            escrever.flush();
+            contadorDeLinha = contadorDeLinha +1;
+         } 
     }
     
     public void escreverCores() throws IOException {

@@ -9,12 +9,20 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import quantizacaoimagem.Imagem;
+import quantizacaoimagem.QuantizacaoImagem;
+import static quantizacaoimagem.QuantizacaoImagem.CAMINHONOVAIMAGEM;
 
 /**
  *
@@ -25,6 +33,7 @@ public class CarregarView extends javax.swing.JFrame {
     private String decodedPath;
     private imagemPanel dPanelbuffer = null;
     private static JFileChooser fcBuffer = null;
+    private File fileBuffer = null;
     /**
      * Creates new form CarregarView
      */
@@ -45,12 +54,12 @@ public class CarregarView extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         btCarregar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btQuantizar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         taAvisos = new javax.swing.JTextArea();
-        tfPathArquivo = new javax.swing.JTextField();
+        btSalvar = new javax.swing.JButton();
+        btSubtrair = new javax.swing.JButton();
         drawPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -62,8 +71,6 @@ public class CarregarView extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 5), "CarregarCena"));
 
-        jLabel1.setText("Arquivo :");
-
         btCarregar.setText("Carregar");
         btCarregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,16 +78,30 @@ public class CarregarView extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Voltar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btQuantizar.setText("Quantizar");
+        btQuantizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btQuantizarActionPerformed(evt);
             }
         });
 
         taAvisos.setColumns(20);
         taAvisos.setRows(5);
         jScrollPane1.setViewportView(taAvisos);
+
+        btSalvar.setText("Salvar");
+        btSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSalvarActionPerformed(evt);
+            }
+        });
+
+        btSubtrair.setText("Subtrair");
+        btSubtrair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSubtrairActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -91,26 +112,25 @@ public class CarregarView extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 464, Short.MAX_VALUE)
-                        .addComponent(tfPathArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btCarregar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btQuantizar, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(btSubtrair, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 62, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tfPathArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btCarregar, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btQuantizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btSubtrair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -127,7 +147,7 @@ public class CarregarView extends javax.swing.JFrame {
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 487, Short.MAX_VALUE)
+            .addGap(0, 493, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -165,15 +185,19 @@ public class CarregarView extends javax.swing.JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION)
             {
                 File file = fcBuffer.getSelectedFile();
+                fileBuffer = file;
                 if (dPanelbuffer==null){
                     imagemPanel imgPanel = new imagemPanel(file);
                     imgPanel.setVisible(true);
                     drawPanel.add(imgPanel);
-                    drawPanel.revalidate();
+                    drawPanel.repaint();
                     dPanelbuffer = imgPanel;
+                    dPanelbuffer.repaint();
+                    drawPanel.revalidate();
                 }else{
                     dPanelbuffer.changeImage(file);
-                    //drawPanel.revalidate();
+                    drawPanel.repaint();
+                    dPanelbuffer.repaint();
                 }
             }
             else
@@ -189,15 +213,101 @@ public class CarregarView extends javax.swing.JFrame {
         System.out.println("end");
     }//GEN-LAST:event_btCarregarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btQuantizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btQuantizarActionPerformed
         // TODO add your handling code here:
-        aoFechar();
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if (!(dPanelbuffer==null)){
+            drawPanel.updateUI();
+            dPanelbuffer.quantizar();
+            drawPanel.repaint();
+            dPanelbuffer.repaint();
+        }else{
+            System.out.println("no image selected");
+        }
+    }//GEN-LAST:event_btQuantizarActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         
     }//GEN-LAST:event_formWindowClosing
+
+    private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
+        // TODO add your handling code here:
+        if (!(fileBuffer==null)){
+            File outFile = new File(fileBuffer.getParent()+"\\test.bmp");
+            FileOutputStream escreverSaida = null;
+            try {
+                escreverSaida = new FileOutputStream(outFile);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            Imagem img = dPanelbuffer.getImagem();
+
+            try {        
+                img.escreverNovaImagem24Bits(escreverSaida);
+            } catch (IOException ex) {
+                Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                escreverSaida.close();
+            } catch (IOException ex) {
+                Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void btSubtrairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubtrairActionPerformed
+        // TODO add your handling code here:
+        if (!(dPanelbuffer==null)){
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP","bmp","arquivo bmp");
+            if (fcBuffer==null)
+            {
+                fcBuffer = new JFileChooser();
+            }
+            fcBuffer.setFileFilter(filter);
+
+            int returnVal = fcBuffer.showOpenDialog(this);
+
+            try{
+                if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                    File file = fcBuffer.getSelectedFile();
+                    fileBuffer = file;
+                    imagemPanel imgPanel = new imagemPanel(file);
+                    
+                    Imagem img1 = dPanelbuffer.getImagem();
+                    int imagemWidth1 = QuantizacaoImagem.binarioParaDecimal(img1.getBiWidth());
+                    int imagemHeight1 = QuantizacaoImagem.binarioParaDecimal(img1.getBiHeight());
+                    
+                    Imagem img2 = imgPanel.getImagem();
+                    int imagemWidth2 = QuantizacaoImagem.binarioParaDecimal(img2.getBiWidth());
+                    int imagemHeight2 = QuantizacaoImagem.binarioParaDecimal(img2.getBiHeight());
+                    
+                    if (imagemWidth1==imagemWidth2&&imagemHeight1==imagemHeight2){
+                        System.out.println("subTraindo!");
+                        drawPanel.updateUI();
+                        dPanelbuffer.subtrair(img2);
+                        drawPanel.repaint();
+                        dPanelbuffer.repaint();
+                    }else{
+                        System.out.println("tamanhos incopativeis");
+                    }
+                }
+                else
+                {
+                    //this.setVisible(true);
+                }
+            }
+            catch( Exception e)
+            {
+                //this.setVisible(true);
+                taAvisos.setText("Erro e = " + e.getMessage());
+            }
+        }
+     
+        System.out.println("end");
+    }//GEN-LAST:event_btSubtrairActionPerformed
     public static void centralizarJanela(JFrame janela)
     {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -245,13 +355,13 @@ public class CarregarView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCarregar;
+    private javax.swing.JButton btQuantizar;
+    private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btSubtrair;
     private javax.swing.JPanel drawPanel;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taAvisos;
-    private javax.swing.JTextField tfPathArquivo;
     // End of variables declaration//GEN-END:variables
 
 }

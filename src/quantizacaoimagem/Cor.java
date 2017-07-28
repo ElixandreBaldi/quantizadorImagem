@@ -43,6 +43,18 @@ public class Cor {
         testValues(msg);
     }
     
+    public Cor subtrair(Cor cor){
+        Cor corRetorno;
+        int newRed = Math.abs(binarioParaDecimal(red)-binarioParaDecimal(cor.red));
+        String snewRed = Integer.toBinaryString(newRed);
+        int newGreen = Math.abs(binarioParaDecimal(green)-binarioParaDecimal(cor.green));
+        String snewGreen = Integer.toBinaryString(newGreen);
+        int newBlue = Math.abs(binarioParaDecimal(blue)-binarioParaDecimal(cor.blue));
+        String snewBlue = Integer.toBinaryString(newBlue);
+        corRetorno = new Cor(snewRed,snewGreen,snewBlue,"sub");
+        return(corRetorno);
+    }
+    
     private void testValues(String msg){
         int Vred = binarioParaDecimal(blue);
         int Vblue = binarioParaDecimal(red);
@@ -117,7 +129,9 @@ public class Cor {
     }
 
     public static void main(String[] args) {
-        Cor c = new Cor("0","0","0","Test Construtor Cor");
-        System.out.println("RESUL=");
+        Cor c = new Cor("101","111","010","Test Construtor Cor");
+        Cor c2 = new Cor("1101","1011","1010","Test Construtor Cor");
+        Cor c3 = c.subtrair(c2);
+        System.out.println("c="+c+",c2="+c2+",c3="+c3);
     }  
 }
