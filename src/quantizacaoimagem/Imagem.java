@@ -315,7 +315,7 @@ public class Imagem {
         }
     }
     
-    public String juntarCores(String pri, String seg, int escolha) {
+    public static String juntarCores(String pri, String seg, int escolha) {
         String strRetorno = "";
         if(escolha == 1) {
             for(int i = 0; i < 5; i++)
@@ -325,6 +325,22 @@ public class Imagem {
         } else if(escolha == 2) {
             for(int i = 0; i < 3; i++)
                 strRetorno += pri.charAt(i);
+            for(int i = 0; i < 6; i++)
+                strRetorno += seg.charAt(i);
+        }
+        return strRetorno;
+    }
+    
+    public static String juntarCoresv2(String pri, String seg, int escolha) {
+        String strRetorno = "";
+        if(escolha == 1) {
+            for(int i = 0; i < 5; i++)
+                strRetorno += pri.charAt(i);
+            for(int i = 0; i < 3; i++)
+                strRetorno += seg.charAt(i);
+        } else if(escolha == 2) {
+            for(int i = 0; i < 3; i++)
+                strRetorno += pri.charAt(i+3);
             for(int i = 0; i < 6; i++)
                 strRetorno += seg.charAt(i);
         }
@@ -427,7 +443,11 @@ public class Imagem {
     }
     
     public static void main(String args[]){
-        String t1 = "12345678";
-        System.out.println(Imagem.truncarString(t1, 5));
+        String red = "12345678";
+        String green = "98765432";
+        String blue = "00000000";
+        String b1 = juntarCoresv2(blue, green, 1);
+        String b2 = juntarCoresv2(green,red, 2);
+        System.out.println("b1="+b1+",b2="+b2);
     }
 }
