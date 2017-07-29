@@ -62,6 +62,7 @@ public class CarregarView extends javax.swing.JFrame {
         taAvisos = new javax.swing.JTextArea();
         btSalvar = new javax.swing.JButton();
         btSubtrair = new javax.swing.JButton();
+        btConverter16to24 = new javax.swing.JButton();
         drawPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -105,6 +106,13 @@ public class CarregarView extends javax.swing.JFrame {
             }
         });
 
+        btConverter16to24.setText("Converter 16-24");
+        btConverter16to24.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConverter16to24ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -114,25 +122,28 @@ public class CarregarView extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btCarregar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btQuantizar, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(btSubtrair, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 62, Short.MAX_VALUE)))
+                        .addComponent(btCarregar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btQuantizar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btSubtrair, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btConverter16to24, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 261, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btCarregar, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(btCarregar)
                     .addComponent(btQuantizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btSubtrair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btSubtrair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btConverter16to24))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -149,7 +160,7 @@ public class CarregarView extends javax.swing.JFrame {
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 493, Short.MAX_VALUE)
+            .addGap(0, 527, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -311,6 +322,46 @@ public class CarregarView extends javax.swing.JFrame {
      
         System.out.println("end");
     }//GEN-LAST:event_btSubtrairActionPerformed
+
+    private void btConverter16to24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConverter16to24ActionPerformed
+        if (!(dPanelbuffer==null)){
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP","bmp","arquivo bmp");
+            if (fcBuffer==null)
+            {
+                fcBuffer = new JFileChooser();
+            }
+            fcBuffer.setFileFilter(filter);
+
+            int returnVal = fcBuffer.showOpenDialog(this);
+
+            try{
+                if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                    File file = fcBuffer.getSelectedFile();
+                    fileBuffer = file;
+                    imagemPanel imgPanel = new imagemPanel(file);
+                    
+                    Imagem img1 = dPanelbuffer.getImagem();
+                    int imagemWidth1 = QuantizacaoImagem.binarioParaDecimal(img1.getBiWidth());
+                    int imagemHeight1 = QuantizacaoImagem.binarioParaDecimal(img1.getBiHeight());
+                    
+                    
+                    
+                }
+                else
+                {
+                    //this.setVisible(true);
+                }
+            }
+            catch( Exception e)
+            {
+                //this.setVisible(true);
+                taAvisos.setText("Erro e = " + e.getMessage());
+            }
+        }
+     
+        System.out.println("end");
+    }//GEN-LAST:event_btConverter16to24ActionPerformed
     public static void centralizarJanela(JFrame janela)
     {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -358,6 +409,7 @@ public class CarregarView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCarregar;
+    private javax.swing.JButton btConverter16to24;
     private javax.swing.JButton btQuantizar;
     private javax.swing.JButton btSalvar;
     private javax.swing.JButton btSubtrair;
