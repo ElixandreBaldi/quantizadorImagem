@@ -155,6 +155,8 @@ public class QuantizacaoImagem {
         
         System.out.println("Espacos vazios : " + pixelsVazios);
         
+        System.out.println("Bibitcountsize=" + img.getBiBitCount()+"="+binarioParaDecimal(img.getBiBitCount()));
+        
         if(contOffset != offsetBits) {
             while(contOffset < offsetBits) {
                 entrada.read();
@@ -163,23 +165,97 @@ public class QuantizacaoImagem {
         }
         int contadorDeLinha = 0;
         int contadorLinhasLidas = 0;
-        for (int j=0;j<numeroDePixels;j++){
-            int intBlue = entrada.read();
-            int intGreen = entrada.read();
-            int intRed = entrada.read();
-            String red = Integer.toBinaryString(intRed);
-            String green = Integer.toBinaryString(intGreen);
-            String blue = Integer.toBinaryString(intBlue);
-            //System.out.println("ID="+j+",Coluna="+contadorLinhasLidas+",valorRed que eh blue="+blue);
-            if (contadorDeLinha>=imagemWidth-1){
-                for (int i=0;i<pixelsVazios;i++){
-                    entrada.read();
+        int debugLinhas = 2;
+        
+        int bitsPorCanal = binarioParaDecimal(img.getBiBitCount());
+        if (bitsPorCanal==24){
+            System.out.println("24 bits");
+            for (int j=0;j<numeroDePixels;j++){
+                int intBlue = entrada.read();
+                int intGreen = entrada.read();
+                int intRed = entrada.read();
+                String red = Integer.toBinaryString(intRed);
+                String green = Integer.toBinaryString(intGreen);
+                String blue = Integer.toBinaryString(intBlue);
+                //System.out.println("ID="+j+",Coluna="+contadorLinhasLidas+",valorRed que eh blue="+blue);
+                if (contadorDeLinha>=imagemWidth-1){
+                    for (int i=0;i<pixelsVazios;i++){
+                        entrada.read();
+                    }
+                    contadorLinhasLidas++;
+                    contadorDeLinha = -1;
                 }
-                contadorLinhasLidas++;
-                contadorDeLinha = -1;
+                if (j<debugLinhas){
+                    System.out.println("red="+red);
+                    System.out.println("green="+green);
+                    System.out.println("blue="+blue);
+                }
+                img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
+                contadorDeLinha = contadorDeLinha +1;
             }
-            img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
-            contadorDeLinha = contadorDeLinha +1;
+        }else if(bitsPorCanal==16){
+            System.out.println("16 bits");
+            for (int j=0;j<numeroDePixels;j++){
+                int intBlueGreen = entrada.read();
+                int intGreenRed = entrada.read();
+                String BlueGreen = Integer.toBinaryString(intBlueGreen);
+                String GreenRed = Integer.toBinaryString(intGreenRed);
+                String blue = "";
+                String green = "";
+                String red = "";
+                int desloc = 8-BlueGreen.length();
+                for (int i=0;i<8;i++)
+                {   
+                    char charLocal;
+                    if (i<desloc){
+                        charLocal = '0';
+                    }else{
+                        charLocal = BlueGreen.charAt(i-desloc);
+                    }
+                    if (i<5){
+                        blue = blue + charLocal;
+                    }else{
+                        green = green + charLocal;
+                    }
+                }
+                desloc = 8-GreenRed.length();
+                for (int i=0;i<8;i++){
+                    char charLocal;
+                    if (i<desloc){
+                        charLocal = '0';
+                    }else{
+                        charLocal = GreenRed.charAt(i-desloc);
+                    }
+                    if (i<3){
+                        green = green + charLocal;
+                    }else{
+                        red = red + charLocal;
+                    }
+                }
+                blue = blue + "000";
+                green = green + "00";
+                red = red + "000";
+                //System.out.println("blue = " + blue);
+                //System.out.println("green = " + green);
+                //System.out.println("red = " + red);
+                //System.out.println("ID="+j+",Coluna="+contadorLinhasLidas+",valorRed que eh blue="+blue);
+                if (contadorDeLinha>=imagemWidth-1){
+                    for (int i=0;i<pixelsVazios;i++){
+                        entrada.read();
+                    }
+                    contadorLinhasLidas++;
+                    contadorDeLinha = -1;
+                }
+                if (j<debugLinhas){
+                    System.out.println("bluegreen = " + BlueGreen);
+                    System.out.println("greenred = " + GreenRed);
+                    System.out.println("red="+red);
+                    System.out.println("green="+green);
+                    System.out.println("blue="+blue);
+                }
+                img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
+                contadorDeLinha = contadorDeLinha +1;
+            }
         }
         System.out.println("Linhas lidas = " + contadorLinhasLidas);
         System.out.println("FIM SETAR CORES");

@@ -129,9 +129,9 @@ public class CarregarView extends javax.swing.JFrame {
                         .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btSubtrair, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btConverter16to24, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 261, Short.MAX_VALUE)))
+                        .addGap(0, 265, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -246,10 +246,13 @@ public class CarregarView extends javax.swing.JFrame {
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
         // TODO add your handling code here:
         if (!(fileBuffer==null)){
-            File outFile = new File(fileBuffer.getParent()+"\\test.bmp");
-            FileOutputStream escreverSaida = null;
+            File outFile16 = new File(fileBuffer.getParent()+"\\test16.bmp");
+            File outFile24 = new File(fileBuffer.getParent()+"\\test24.bmp");
+            FileOutputStream escreverSaida16 = null;
+            FileOutputStream escreverSaida24 = null;
             try {
-                escreverSaida = new FileOutputStream(outFile);
+                escreverSaida16 = new FileOutputStream(outFile16);
+                escreverSaida24 = new FileOutputStream(outFile24);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -258,13 +261,15 @@ public class CarregarView extends javax.swing.JFrame {
 
             try {        
                 //img.escreverNovaImagem24Bits(escreverSaida);
-                img.escreverNovaImagem16Bits(escreverSaida);
+                img.escreverNovaImagem16Bits(escreverSaida16);
+                img.escreverNovaImagem24Bits(escreverSaida24);
             } catch (IOException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
-                escreverSaida.close();
+                escreverSaida16.close();
+                escreverSaida24.close();
             } catch (IOException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
             }

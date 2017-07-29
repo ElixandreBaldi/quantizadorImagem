@@ -305,6 +305,7 @@ public class Imagem {
         System.out.println("pixelsVazios : "+pixelsVazios);
         int contadorDeLinha = 0;
         int contadorLinhasLidas = 0;
+        int debugLinhas = 2;
         
         String emptyString = "00000000";
         
@@ -317,8 +318,15 @@ public class Imagem {
             String red = pixel.get(i).getRed();
             
            // System.out.println("red: " +red+ ", green:"+green+", blue:"+blue);
-            String b1 = juntarCores(red, green, 1);
-            String b2 = juntarCores(green, blue, 2);
+            String b1 = juntarCores(green, red, 2);
+            String b2 = juntarCores(blue, green, 1);
+            if (i<debugLinhas){
+                System.out.println("red="+red);
+                System.out.println("green="+green);
+                System.out.println("blue="+blue);
+                System.out.println("escrevendo bluegreen : " + b2);
+                System.out.println("escrevendo greenred : " + b1);
+            }
             //System.out.println("red + green= "+b1+",green + blue= "+b2);
                         
             escrever.write(byteStringToByte(b2));            
