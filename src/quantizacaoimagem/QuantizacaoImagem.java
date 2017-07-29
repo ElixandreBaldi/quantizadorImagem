@@ -189,7 +189,8 @@ public class QuantizacaoImagem {
     public void salvarImagem(Imagem img,String sufixo) throws FileNotFoundException, IOException {
         FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM+sufixo);
         
-        img.escreverNovaImagem(escreverSaida);        
+        //img.escreverNovaImagem24Bits(escreverSaida);        
+        img.escreverNovaImagem16Bits(escreverSaida);        
         
         escreverSaida.close();
     }

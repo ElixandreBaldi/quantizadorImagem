@@ -52,7 +52,8 @@ public class imagemFrame extends javax.swing.JFrame {
     public void salvarImagem(Imagem img) throws FileNotFoundException, IOException {
         FileOutputStream escreverSaida = new FileOutputStream(CAMINHONOVAIMAGEM);
         
-        img.escreverNovaImagem(escreverSaida);        
+        //img.escreverNovaImagem24Bits(escreverSaida);        
+        img.escreverNovaImagem16Bits(escreverSaida);        
         
         escreverSaida.close();
     }

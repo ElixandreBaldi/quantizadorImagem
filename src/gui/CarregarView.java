@@ -1,3 +1,5 @@
+package gui;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -244,7 +246,8 @@ public class CarregarView extends javax.swing.JFrame {
             Imagem img = dPanelbuffer.getImagem();
 
             try {        
-                img.escreverNovaImagem24Bits(escreverSaida);
+                //img.escreverNovaImagem24Bits(escreverSaida);
+                img.escreverNovaImagem16Bits(escreverSaida);
             } catch (IOException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
             }

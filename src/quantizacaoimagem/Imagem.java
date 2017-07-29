@@ -187,15 +187,13 @@ public class Imagem {
         this.biClrImportant = biClrImportant;
     }
     
-    public void escreverNovaImagem(FileOutputStream escrever) throws IOException {
-        this.escrever = escrever;
-        
-        escreverCabecalhos();
-        escreverCores();
+    public void escreverNovaImagem16Bits(FileOutputStream escrever) throws IOException {
+        escreverCabecalhos(escrever,"0000000000010000");
+        escreverCores16bits(escrever);
     }
     
     public void escreverNovaImagem24Bits(FileOutputStream escrever)throws IOException {
-        escreverCabecalhos(escrever);
+        escreverCabecalhos(escrever,"0000000000011000");
         escreverCores24bits(escrever);
     }
     
@@ -233,11 +231,21 @@ public class Imagem {
         return retorno;        
     }
     
-    public void escreverCabecalhos(FileOutputStream escrever) throws IOException {   
+    public void escreverCabecalhos(FileOutputStream escrever, String qtdBits) throws IOException {   
         String cabecalhoBytes[] = new String[16];
+        String novoSize = "";
+        if(qtdBits.equals("0000000000011000"))
+            novoSize = size;
+        else if(qtdBits.equals("0000000000010000")){
+            int novoSize2 = (binarioParaDecimal(size) - ((binarioParaDecimal(biWidth)*binarioParaDecimal(biHeight))*8));
+            novoSize = Integer.toBinaryString(novoSize2);
+            while(novoSize.length() < 32)
+                    novoSize = "0"+novoSize;
+        } else
+            System.out.println("ERRO");
         
         cabecalhoBytes[0] = type;
-        cabecalhoBytes[1] = size;
+        cabecalhoBytes[1] = novoSize;
         cabecalhoBytes[2] = reserved;
         cabecalhoBytes[3] = reserved2;
         cabecalhoBytes[4] = offsetBits;
@@ -246,7 +254,7 @@ public class Imagem {
         cabecalhoBytes[6] = biWidth;
         cabecalhoBytes[7] = biHeight;
         cabecalhoBytes[8] = biPlanes;
-        cabecalhoBytes[9] = biBitCount;
+        cabecalhoBytes[9] = qtdBits;
         cabecalhoBytes[10] = biCompression;        
         cabecalhoBytes[11] = biSizeImage;
         cabecalhoBytes[12] = biXPelsPerMeter;
@@ -272,48 +280,7 @@ public class Imagem {
                 escrever.flush();
             }            
         }
-    }
-    
-    public void escreverCabecalhos() throws IOException {   
-        String cabecalhoBytes[] = new String[16];
-        
-        cabecalhoBytes[0] = type;
-        cabecalhoBytes[1] = size;
-        cabecalhoBytes[2] = reserved;
-        cabecalhoBytes[3] = reserved2;
-        cabecalhoBytes[4] = offsetBits;
-
-        cabecalhoBytes[5] = biSize;
-        cabecalhoBytes[6] = biWidth;
-        cabecalhoBytes[7] = biHeight;
-        cabecalhoBytes[8] = biPlanes;
-        cabecalhoBytes[9] = biBitCount;
-        cabecalhoBytes[10] = biCompression;        
-        cabecalhoBytes[11] = biSizeImage;
-        cabecalhoBytes[12] = biXPelsPerMeter;
-        cabecalhoBytes[13] = biYPelsPerMeter;
-        cabecalhoBytes[14] = biClrUsed;
-        cabecalhoBytes[15] = biClrImportant; 
-        
-        
-        for(int i = 0; i < cabecalhoBytes.length; i++) {
-            String str1 = quebrarString(cabecalhoBytes[i], 1);
-            String str2 = quebrarString(cabecalhoBytes[i], 2);
-            String str3 = quebrarString(cabecalhoBytes[i], 3);
-            String str4 = quebrarString(cabecalhoBytes[i], 4);
-            
-            escrever.write(byteStringToByte(str1));
-            escrever.flush();
-            escrever.write(byteStringToByte(str2));
-            escrever.flush();
-            if(!str3.equals("")) {
-                escrever.write(byteStringToByte(str3));
-                escrever.flush();
-                escrever.write(byteStringToByte(str4));
-                escrever.flush();
-            }            
-        }
-    }
+    }        
     
     public static String juntarCores(String pri, String seg, int escolha) {
         String strRetorno = "";
@@ -323,28 +290,53 @@ public class Imagem {
             for(int i = 0; i < 3; i++)
                 strRetorno += seg.charAt(i);
         } else if(escolha == 2) {
-            for(int i = 0; i < 3; i++)
+            for(int i = 3; i < 6; i++)
                 strRetorno += pri.charAt(i);
-            for(int i = 0; i < 6; i++)
-                strRetorno += seg.charAt(i);
-        }
-        return strRetorno;
-    }
-    
-    public static String juntarCoresv2(String pri, String seg, int escolha) {
-        String strRetorno = "";
-        if(escolha == 1) {
             for(int i = 0; i < 5; i++)
-                strRetorno += pri.charAt(i);
-            for(int i = 0; i < 3; i++)
-                strRetorno += seg.charAt(i);
-        } else if(escolha == 2) {
-            for(int i = 0; i < 3; i++)
-                strRetorno += pri.charAt(i+3);
-            for(int i = 0; i < 6; i++)
                 strRetorno += seg.charAt(i);
         }
         return strRetorno;
+    }        
+    
+    public void escreverCores16bits(FileOutputStream escrever) throws IOException {
+        int imagemWidth = binarioParaDecimal(biWidth);
+        int imagemHeight = binarioParaDecimal(biHeight);
+        int pixelsVazios = imagemWidth%4;
+        System.out.println("pixelsVazios : "+pixelsVazios);
+        int contadorDeLinha = 0;
+        int contadorLinhasLidas = 0;
+        
+        String emptyString = "00000000";
+        
+        int quantiaPixels = imagemWidth*imagemHeight;
+        System.out.println(pixel.size()+"="+quantiaPixels);
+        
+        for(int i = 0; i < pixel.size(); i++) {
+            String blue = pixel.get(i).getBlue();
+            String green = pixel.get(i).getGreen();
+            String red = pixel.get(i).getRed();
+            
+           // System.out.println("red: " +red+ ", green:"+green+", blue:"+blue);
+            String b1 = juntarCores(red, green, 1);
+            String b2 = juntarCores(green, blue, 2);
+            //System.out.println("red + green= "+b1+",green + blue= "+b2);
+                        
+            escrever.write(byteStringToByte(b2));            
+            escrever.write(byteStringToByte(b1));           
+           
+            //System.out.println("writing linha");
+             
+            if (contadorDeLinha>=imagemWidth-1){
+                //System.out.println("write espaço vazio");
+                for (int j=0;j<pixelsVazios;j++){
+                    escrever.write(byteStringToByte(emptyString));
+                }
+                contadorLinhasLidas++;
+                contadorDeLinha = -1;
+            }
+            escrever.flush();
+            contadorDeLinha = contadorDeLinha +1;
+         } 
     }
     
     public void escreverCores24bits(FileOutputStream escrever) throws IOException {
@@ -365,10 +357,6 @@ public class Imagem {
             String green = pixel.get(i).getGreen();
             String red = pixel.get(i).getRed();
 
-            String primeiroByte = juntarCores(blue, green, 1);
-            String segundoByte = juntarCores(green, red, 2);
-
-
             escrever.write(byteStringToByte(blue));           
             escrever.write(byteStringToByte(green));
             escrever.write(byteStringToByte(red));
@@ -387,33 +375,7 @@ public class Imagem {
             contadorDeLinha = contadorDeLinha +1;
          } 
     }
-    
-    public void escreverCores() throws IOException {
-        for(int i = 0; i < pixel.size(); i++) {
-            String blue = pixel.get(i).getBlue();
-            String green = pixel.get(i).getGreen();
-            String red = pixel.get(i).getRed();
-            
-            String primeiroByte = juntarCores(blue, green, 1);
-            String segundoByte = juntarCores(green, red, 2);
-            
-            
-            escrever.write(byteStringToByte(primeiroByte));
-            escrever.flush();            
-            escrever.write(byteStringToByte(segundoByte));
-            escrever.flush();
-            
-        }
-        escrever.write(byteStringToByte("00000000"));
-        escrever.flush();
-        escrever.write(byteStringToByte("00000000"));
-        escrever.flush();       
-    }    
-    
-    ///12345678
-    ///12345000
-    
-    //000000000
+        
     public static String truncarString(String palavra, int limite) {
         //System.out.println("palavara="+palavra);
         String palavraTruncada = "";
@@ -446,8 +408,9 @@ public class Imagem {
         String red = "12345678";
         String green = "98765432";
         String blue = "00000000";
-        String b1 = juntarCoresv2(blue, green, 1);
-        String b2 = juntarCoresv2(green,red, 2);
-        System.out.println("b1="+b1+",b2="+b2);
+        System.out.println("red: " +red+ ", green:"+green+",, blue:"+blue);
+        String b1 = juntarCores(red, green, 1);
+        String b2 = juntarCores(green,blue, 2);
+        System.out.println("blue + green="+b1+",green + red="+b2);
     }
 }
