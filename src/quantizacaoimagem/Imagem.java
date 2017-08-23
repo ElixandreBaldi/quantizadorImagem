@@ -202,7 +202,7 @@ public class Imagem {
     }
     
     public String quebrarString (String original, int parte) {
-        String retorno = "";
+        StringBuilder retorno = new StringBuilder("");
         int j = 0;
         if(original.length() == 16 && (parte == 3 || parte == 4))
             return "";
@@ -225,10 +225,10 @@ public class Imagem {
         }
         
         for(int i = 0; i < 8; i++) {
-            retorno += original.charAt(j);
+            retorno.append(original.charAt(j));
             j++;
         }
-        return retorno;        
+        return retorno.toString();        
     }
     
     public void escreverCabecalhos(FileOutputStream escrever, String qtdBits) throws IOException {   
@@ -283,19 +283,19 @@ public class Imagem {
     }        
     
     public static String juntarCores(String pri, String seg, int escolha) {
-        String strRetorno = "";
+        StringBuilder strRetorno = new StringBuilder("");
         if(escolha == 1) {
             for(int i = 0; i < 5; i++)
-                strRetorno += pri.charAt(i);
+                strRetorno.append(pri.charAt(i));
             for(int i = 0; i < 3; i++)
-                strRetorno += seg.charAt(i);
+                strRetorno.append(seg.charAt(i));
         } else if(escolha == 2) {
             for(int i = 3; i < 6; i++)
-                strRetorno += pri.charAt(i);
+                strRetorno.append(pri.charAt(i));
             for(int i = 0; i < 5; i++)
-                strRetorno += seg.charAt(i);
+                strRetorno.append(seg.charAt(i));
         }
-        return strRetorno;
+        return strRetorno.toString();
     }        
     
     public void escreverCores16bits(FileOutputStream escrever) throws IOException {
@@ -386,19 +386,19 @@ public class Imagem {
         
     public static String truncarString(String palavra, int limite) {
         //System.out.println("palavara="+palavra);
-        String palavraTruncada = "";
+        StringBuilder palavraTruncada = new StringBuilder("");
         for(int i = 0; i < limite; i++) {
             if (i<palavra.length())
-            palavraTruncada += palavra.charAt(i);
+                palavraTruncada.append(palavra.charAt(i));
             else
-            palavraTruncada += "0";
+                palavraTruncada.append('0');
         }
         
         while(palavraTruncada.length() < 8) {
-            palavraTruncada += "0";
+            palavraTruncada.append('0');
         }
         
-        return palavraTruncada;
+        return palavraTruncada.toString();
     }
     
     public void quantizar() {

@@ -18,27 +18,30 @@ public class Cor {
 
     public Cor(String red, String green, String blue,String msg) {
         //System.out.println("Entrada ="+red+","+green+","+blue);
-        String zeros = "";
+        StringBuilder zeros = new StringBuilder("");
         int dif = 0;
         dif = 8-red.length();
         for (int i=0;i<dif;i++){
-            zeros = zeros+"0";
+            zeros.append('0');
         }
-        this.red = zeros+red;
-        zeros = "";
+        zeros.append(red);
+        this.red = zeros.toString();
+        zeros.setLength(0);
         dif = 0;
         dif = 8-green.length();
         for (int i=0;i<dif;i++){
-            zeros = zeros+"0";
+            zeros.append('0');
         }
-        this.green = zeros+green;
-        zeros = "";
+        zeros.append(green);
+        this.green = zeros.toString();
+        zeros.setLength(0);
         dif = 0;
         dif = 8-blue.length();
         for (int i=0;i<dif;i++){
-            zeros = zeros+"0";
+            zeros.append('0');
         }
-        this.blue = zeros+blue;
+        zeros.append(blue);
+        this.blue = zeros.toString();
         //System.out.println("Saida ="+this.red+","+this.green+","+this.blue);
         testValues(msg);
     }

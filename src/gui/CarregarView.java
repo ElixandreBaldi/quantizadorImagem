@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -43,7 +44,7 @@ public class CarregarView extends javax.swing.JFrame {
         initComponents();
         String path = CarregarView.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         centralizarJanela(this);
-        drawPanel.setLayout(new FlowLayout());
+        drawPanel.setLayout(null);
     }
 
     /**
@@ -60,9 +61,11 @@ public class CarregarView extends javax.swing.JFrame {
         btQuantizar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         taAvisos = new javax.swing.JTextArea();
-        btSalvar = new javax.swing.JButton();
+        btSalvar24 = new javax.swing.JButton();
         btSubtrair = new javax.swing.JButton();
-        btConverter16to24 = new javax.swing.JButton();
+        lbMsg = new javax.swing.JLabel();
+        btSalvar16 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
         drawPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -92,10 +95,10 @@ public class CarregarView extends javax.swing.JFrame {
         taAvisos.setRows(5);
         jScrollPane1.setViewportView(taAvisos);
 
-        btSalvar.setText("Salvar");
-        btSalvar.addActionListener(new java.awt.event.ActionListener() {
+        btSalvar24.setText("Salvar24");
+        btSalvar24.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSalvarActionPerformed(evt);
+                btSalvar24ActionPerformed(evt);
             }
         });
 
@@ -106,10 +109,12 @@ public class CarregarView extends javax.swing.JFrame {
             }
         });
 
-        btConverter16to24.setText("Converter 16-24");
-        btConverter16to24.addActionListener(new java.awt.event.ActionListener() {
+        lbMsg.setText("Mensagem : ");
+
+        btSalvar16.setText("Salvar16");
+        btSalvar16.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btConverter16to24ActionPerformed(evt);
+                btSalvar16ActionPerformed(evt);
             }
         });
 
@@ -122,35 +127,44 @@ public class CarregarView extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btCarregar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btQuantizar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btSubtrair, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btConverter16to24, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 265, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbMsg)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btCarregar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btQuantizar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btSalvar24, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btSalvar16, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(17, 17, 17)
+                                .addComponent(btSubtrair, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addContainerGap()
+                .addComponent(lbMsg)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(btCarregar)
                     .addComponent(btQuantizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btSalvar24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btSubtrair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btConverter16to24))
+                    .addComponent(btSalvar16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
         drawPanel.setBackground(new java.awt.Color(153, 153, 153));
         drawPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 5));
+        drawPanel.setPreferredSize(new java.awt.Dimension(2000, 2000));
 
         javax.swing.GroupLayout drawPanelLayout = new javax.swing.GroupLayout(drawPanel);
         drawPanel.setLayout(drawPanelLayout);
@@ -160,21 +174,25 @@ public class CarregarView extends javax.swing.JFrame {
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 527, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        jScrollPane2.setViewportView(drawPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(drawPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(drawPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -184,6 +202,7 @@ public class CarregarView extends javax.swing.JFrame {
 
     private void btCarregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCarregarActionPerformed
         // TODO add your handling code here:
+        lbMsg.setText("Abrindo imagem.....");
         this.setVisible(true);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP","bmp","arquivo bmp");
         if (fcBuffer==null)
@@ -197,6 +216,7 @@ public class CarregarView extends javax.swing.JFrame {
         try{
             if (returnVal == JFileChooser.APPROVE_OPTION)
             {
+                long startTime = System.nanoTime();
                 File file = fcBuffer.getSelectedFile();
                 fileBuffer = file;
                 if (dPanelbuffer==null){
@@ -207,20 +227,29 @@ public class CarregarView extends javax.swing.JFrame {
                     dPanelbuffer = imgPanel;
                     dPanelbuffer.repaint();
                     drawPanel.revalidate();
+                    this.pack();
                 }else{
                     dPanelbuffer.changeImage(file);
                     drawPanel.repaint();
                     dPanelbuffer.repaint();
+                    this.pack();
                 }
+                long endTime = System.nanoTime();
+                long elapsed = endTime-startTime;
+                double segundo = (elapsed+0.0)/1000000000.0;
+                System.out.println("Elapsed="+elapsed);
+                lbMsg.setText("Imagem aberta com sucesso!Tempo : "+segundo);
             }
             else
             {
+                lbMsg.setText("Cancelado!");
                 //this.setVisible(true);
             }
         }
         catch( Exception e)
         {
             //this.setVisible(true);
+            lbMsg.setText("Erro!");
             taAvisos.setText("Erro e = " + e.getMessage());
         }
         System.out.println("end");
@@ -228,13 +257,23 @@ public class CarregarView extends javax.swing.JFrame {
 
     private void btQuantizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btQuantizarActionPerformed
         // TODO add your handling code here:
+        lbMsg.setText("Quantizando imagem....");
         if (!(dPanelbuffer==null)){
+            long startTime = System.nanoTime();
+            
             drawPanel.updateUI();
             dPanelbuffer.quantizar();
             drawPanel.repaint();
             dPanelbuffer.repaint();
+            
+            long endTime = System.nanoTime();
+            long elapsed = endTime-startTime;
+            double segundo = (elapsed+0.0)/1000000000.0;
+            System.out.println("Elapsed="+elapsed);
+            lbMsg.setText("Imagem quantizada com sucesso!Tempo : "+segundo);
         }else{
             System.out.println("no image selected");
+            lbMsg.setText("Nenhuma imagem selecionada!");
         }
     }//GEN-LAST:event_btQuantizarActionPerformed
 
@@ -243,15 +282,17 @@ public class CarregarView extends javax.swing.JFrame {
         
     }//GEN-LAST:event_formWindowClosing
 
-    private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
+    private void btSalvar24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvar24ActionPerformed
         // TODO add your handling code here:
+        lbMsg.setText("Salvando em 24bits...");
         if (!(fileBuffer==null)){
-            File outFile16 = new File(fileBuffer.getParent()+"\\test16.bmp");
+            long startTime = System.nanoTime();
+            //File outFile16 = new File(fileBuffer.getParent()+"\\test16.bmp");
             File outFile24 = new File(fileBuffer.getParent()+"\\test24.bmp");
-            FileOutputStream escreverSaida16 = null;
+            //FileOutputStream escreverSaida16 = null;
             FileOutputStream escreverSaida24 = null;
             try {
-                escreverSaida16 = new FileOutputStream(outFile16);
+                //escreverSaida16 = new FileOutputStream(outFile16);
                 escreverSaida24 = new FileOutputStream(outFile24);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
@@ -260,24 +301,32 @@ public class CarregarView extends javax.swing.JFrame {
             Imagem img = dPanelbuffer.getImagem();
 
             try {        
-                //img.escreverNovaImagem24Bits(escreverSaida);
-                img.escreverNovaImagem16Bits(escreverSaida16);
+                //img.escreverNovaImagem16Bits(escreverSaida16);
                 img.escreverNovaImagem24Bits(escreverSaida24);
+                long endTime = System.nanoTime();
+                long elapsed = endTime-startTime;
+                double segundo = (elapsed+0.0)/1000000000.0;
+                System.out.println("Elapsed="+elapsed);
+                lbMsg.setText("Imagem salva(24bits) com sucesso!Tempo : "+segundo);
             } catch (IOException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+                lbMsg.setText("Erro1");
             }
-
             try {
-                escreverSaida16.close();
+                //escreverSaida16.close();
                 escreverSaida24.close();
             } catch (IOException ex) {
                 Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+                lbMsg.setText("Erro2");
             }
+        }else{
+            lbMsg.setText("Nenhuma imagem selecionada!");
         }
-    }//GEN-LAST:event_btSalvarActionPerformed
+    }//GEN-LAST:event_btSalvar24ActionPerformed
 
     private void btSubtrairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubtrairActionPerformed
         // TODO add your handling code here:
+        lbMsg.setText("Subtraindo...");
         if (!(dPanelbuffer==null)){
             FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP","bmp","arquivo bmp");
             if (fcBuffer==null)
@@ -291,6 +340,7 @@ public class CarregarView extends javax.swing.JFrame {
             try{
                 if (returnVal == JFileChooser.APPROVE_OPTION)
                 {
+                    long startTime = System.nanoTime();
                     File file = fcBuffer.getSelectedFile();
                     fileBuffer = file;
                     imagemPanel imgPanel = new imagemPanel(file);
@@ -309,18 +359,25 @@ public class CarregarView extends javax.swing.JFrame {
                         dPanelbuffer.subtrair(img2);
                         drawPanel.repaint();
                         dPanelbuffer.repaint();
+                        long endTime = System.nanoTime();
+                        long elapsed = endTime-startTime;
+                        double segundo = (elapsed+0.0)/1000000000.0;
+                        System.out.println("Elapsed="+elapsed);
+                        lbMsg.setText("Subtracao com sucesso!Tempo : "+segundo);
                     }else{
-                        System.out.println("tamanhos incopativeis");
+                        lbMsg.setText("Erro, tamanhos incompativeis");
                     }
                 }
                 else
                 {
+                    lbMsg.setText("Cancelado!");
                     //this.setVisible(true);
                 }
             }
             catch( Exception e)
             {
                 //this.setVisible(true);
+                lbMsg.setText("Erro");
                 taAvisos.setText("Erro e = " + e.getMessage());
             }
         }
@@ -328,45 +385,45 @@ public class CarregarView extends javax.swing.JFrame {
         System.out.println("end");
     }//GEN-LAST:event_btSubtrairActionPerformed
 
-    private void btConverter16to24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConverter16to24ActionPerformed
-        if (!(dPanelbuffer==null)){
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP","bmp","arquivo bmp");
-            if (fcBuffer==null)
-            {
-                fcBuffer = new JFileChooser();
+    private void btSalvar16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvar16ActionPerformed
+        // TODO add your handling code here:
+        lbMsg.setText("Salvando em 16 bits....");
+        if (!(fileBuffer==null)){
+            long startTime = System.nanoTime();
+            File outFile16 = new File(fileBuffer.getParent()+"\\test16.bmp");
+            //File outFile24 = new File(fileBuffer.getParent()+"\\test24.bmp");
+            FileOutputStream escreverSaida16 = null;
+            //FileOutputStream escreverSaida24 = null;
+            try {
+                escreverSaida16 = new FileOutputStream(outFile16);
+                //escreverSaida24 = new FileOutputStream(outFile24);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
             }
-            fcBuffer.setFileFilter(filter);
 
-            int returnVal = fcBuffer.showOpenDialog(this);
+            Imagem img = dPanelbuffer.getImagem();
 
-            try{
-                if (returnVal == JFileChooser.APPROVE_OPTION)
-                {
-                    File file = fcBuffer.getSelectedFile();
-                    fileBuffer = file;
-                    imagemPanel imgPanel = new imagemPanel(file);
-                    
-                    Imagem img1 = dPanelbuffer.getImagem();
-                    int imagemWidth1 = QuantizacaoImagem.binarioParaDecimal(img1.getBiWidth());
-                    int imagemHeight1 = QuantizacaoImagem.binarioParaDecimal(img1.getBiHeight());
-                    
-                    
-                    
-                }
-                else
-                {
-                    //this.setVisible(true);
-                }
+            try {        
+                img.escreverNovaImagem16Bits(escreverSaida16);
+                //img.escreverNovaImagem24Bits(escreverSaida24);
+                long endTime = System.nanoTime();
+                long elapsed = endTime-startTime;
+                double segundo = (elapsed+0.0)/1000000000.0;
+                System.out.println("Elapsed="+elapsed);
+                lbMsg.setText("Imagem salva(16bits) com sucesso!Tempo : "+segundo);
+            } catch (IOException ex) {
+                Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+                lbMsg.setText("Erro1");
             }
-            catch( Exception e)
-            {
-                //this.setVisible(true);
-                taAvisos.setText("Erro e = " + e.getMessage());
+            try {
+                escreverSaida16.close();
+                //escreverSaida24.close();
+            } catch (IOException ex) {
+                Logger.getLogger(CarregarView.class.getName()).log(Level.SEVERE, null, ex);
+                lbMsg.setText("Erro2");
             }
         }
-     
-        System.out.println("end");
-    }//GEN-LAST:event_btConverter16to24ActionPerformed
+    }//GEN-LAST:event_btSalvar16ActionPerformed
     public static void centralizarJanela(JFrame janela)
     {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -414,13 +471,15 @@ public class CarregarView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCarregar;
-    private javax.swing.JButton btConverter16to24;
     private javax.swing.JButton btQuantizar;
-    private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btSalvar16;
+    private javax.swing.JButton btSalvar24;
     private javax.swing.JButton btSubtrair;
     private javax.swing.JPanel drawPanel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbMsg;
     private javax.swing.JTextArea taAvisos;
     // End of variables declaration//GEN-END:variables
 

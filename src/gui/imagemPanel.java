@@ -59,6 +59,7 @@ public class imagemPanel extends javax.swing.JPanel {
         int quantiaPixels = imagemWidth*imagemHeight;
         
         BufferedImage quadro = new BufferedImage(imagemWidth,imagemHeight,BufferedImage.TYPE_INT_ARGB);
+        System.out.println("width="+imagemWidth+",height="+imagemHeight);
         buffer = quadro;
 
         for (int i=0;i<imagemHeight;i++)
@@ -80,6 +81,8 @@ public class imagemPanel extends javax.swing.JPanel {
                 quadro.setRGB(j, i, corPreencher);
             }
         }
+        this.setPreferredSize(new Dimension(buffer.getWidth(),buffer.getHeight()));
+        this.setSize(this.getPreferredSize());
         this.repaint();
         System.out.println("fim setter image");
     }
@@ -121,9 +124,11 @@ public class imagemPanel extends javax.swing.JPanel {
                 quadro.setRGB(j, i, corPreencher);
             }
         }
+        this.setPreferredSize(new Dimension(buffer.getWidth(),buffer.getHeight()));
+        this.setSize(this.getPreferredSize());
         this.repaint();
+        System.out.println("this preferredsize="+this.getPreferredSize()+",thissize="+this.getSize());
         System.out.println("fim setter image");
-        //this.setPreferredSize(new Dimension(buffer.getWidth(),buffer.getHeight()));
         }
         catch(Exception e){
             System.out.println("Erro imagemPanel");
