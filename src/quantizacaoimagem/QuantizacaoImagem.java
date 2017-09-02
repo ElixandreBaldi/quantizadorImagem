@@ -5,6 +5,7 @@
  */
 package quantizacaoimagem;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -150,7 +151,7 @@ public class QuantizacaoImagem {
         System.out.println("Imagem W : "+imagemWidth+",Imagem H : "+imagemHeight);
         int contOffset = 54;
         int offsetBits = binarioParaDecimal(img.getOffsetBits());
-        
+        BufferedInputStream bInput = new BufferedInputStream(entrada);
         int pixelsVazios = imagemWidth%4;
         
         System.out.println("Espacos vazios : " + pixelsVazios);
@@ -170,29 +171,58 @@ public class QuantizacaoImagem {
         int bitsPorCanal = binarioParaDecimal(img.getBiBitCount());
         if (bitsPorCanal==24){
             System.out.println("24 bits");
-            for (int j=0;j<numeroDePixels;j++){
-                int intBlue = entrada.read();
-                int intGreen = entrada.read();
-                int intRed = entrada.read();
-                String red = Integer.toBinaryString(intRed);
-                String green = Integer.toBinaryString(intGreen);
-                String blue = Integer.toBinaryString(intBlue);
-                //System.out.println("ID="+j+",Coluna="+contadorLinhasLidas+",valorRed que eh blue="+blue);
-                if (contadorDeLinha>=imagemWidth-1){
-                    for (int i=0;i<pixelsVazios;i++){
-                        entrada.read();
+            // /*
+            //ler 1 linha por vez = 
+            int numeroLido = 0;
+            for (int j=0;j<imagemHeight;j++){
+                byte[] linhaLida = new byte[imagemWidth*3+pixelsVazios];
+                bInput.read(linhaLida);
+                for (int i=0;i<imagemWidth;i++){
+                    numeroLido=numeroLido+1;
+                    byte intBlue = linhaLida[i*3];
+                    byte intGreen = linhaLida[i*3+1];
+                    byte intRed = linhaLida[i*3+2];
+                    String red = Integer.toBinaryString( Byte.toUnsignedInt(intRed) );
+                    String green = Integer.toBinaryString( Byte.toUnsignedInt(intGreen) );
+                    String blue = Integer.toBinaryString( Byte.toUnsignedInt(intBlue) );
+                    img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
+                    if (j==1 && i<2){
+                        System.out.println("intred="+intRed+"red="+red);
+                        System.out.println("intgreen="+intGreen+"green="+green);
+                        System.out.println("intblue="+intBlue+"blue="+blue);
                     }
-                    contadorLinhasLidas++;
-                    contadorDeLinha = -1;
                 }
-                if (j<debugLinhas){
-                    System.out.println("red="+red);
-                    System.out.println("green="+green);
-                    System.out.println("blue="+blue);
-                }
-                img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
-                contadorDeLinha = contadorDeLinha +1;
             }
+            System.out.println("size depois de ler imagem : " + img.getPixel().size());
+            // */
+            /*
+            for (int j=0;j<imagemHeight;j++){
+                for (int i=0;i<imagemWidth;i++){
+                    int valorLido = j*imagemHeight+i;
+                    int intBlue = entrada.read();
+                    int intGreen = entrada.read();
+                    int intRed = entrada.read();
+                    String red = Integer.toBinaryString(intRed);
+                    String green = Integer.toBinaryString(intGreen);
+                    String blue = Integer.toBinaryString(intBlue);
+                    //System.out.println("ID="+j+",Coluna="+contadorLinhasLidas+",valorRed que eh blue="+blue);
+                    if (contadorDeLinha>=imagemWidth-1){
+                        for (int i2=0;i2<pixelsVazios;i2++){
+                            entrada.read();
+                        }
+                        contadorLinhasLidas++;
+                        contadorDeLinha = -1;
+                    }
+                    if (j==1 && i<2){
+                        System.out.println("intred="+intRed+"red="+red);
+                        System.out.println("intgreen="+intGreen+"green="+green);
+                        System.out.println("intblue="+intBlue+"blue="+blue);
+                    }
+                    img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
+                    contadorDeLinha = contadorDeLinha +1;
+                }
+            }
+            // */
         }else if(bitsPorCanal==16){
             System.out.println("16 bits");
             for (int j=0;j<numeroDePixels;j++){
