@@ -225,6 +225,58 @@ public class QuantizacaoImagem {
             // */
         }else if(bitsPorCanal==16){
             System.out.println("16 bits");
+            for (int j=0;j<imagemHeight;j++){
+                byte[] linhaLida = new byte[imagemWidth*2+pixelsVazios];
+                bInput.read(linhaLida);
+                for (int i=0;i<imagemWidth;i++){
+                    byte intBlueGreen = linhaLida[i*2];
+                    byte intGreenRed = linhaLida[i*2+1];
+                    String BlueGreen = Integer.toBinaryString( Byte.toUnsignedInt(intBlueGreen) );
+                    String GreenRed = Integer.toBinaryString( Byte.toUnsignedInt(intGreenRed) );
+                    String blue = "";
+                    String green = "";
+                    String red = "";
+                    int desloc = 8-BlueGreen.length();
+                    for (int k=0;k<8;k++)
+                    {   
+                        char charLocal;
+                        if (k<desloc){
+                            charLocal = '0';
+                        }else{
+                            charLocal = BlueGreen.charAt(k-desloc);
+                        }
+                        if (k<5){
+                            blue = blue + charLocal;
+                        }else{
+                            green = green + charLocal;
+                        }
+                    }
+                    desloc = 8-GreenRed.length();
+                    for (int k=0;k<8;k++){
+                        char charLocal;
+                        if (k<desloc){
+                            charLocal = '0';
+                        }else{
+                            charLocal = GreenRed.charAt(k-desloc);
+                        }
+                        if (k<3){
+                            green = green + charLocal;
+                        }else{
+                            red = red + charLocal;
+                        }
+                    }
+                    blue = blue + "000";
+                    green = green + "00";
+                    red = red + "000";
+                    img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
+                    if (j==1 && i<2){
+                        System.out.println("red="+red);
+                        System.out.println("green="+green);
+                        System.out.println("blue="+blue);
+                    }
+                }
+            }
+            /*
             for (int j=0;j<numeroDePixels;j++){
                 int intBlueGreen = entrada.read();
                 int intGreenRed = entrada.read();
@@ -286,6 +338,7 @@ public class QuantizacaoImagem {
                 img.setPixel(red, green, blue,("ID="+Integer.toString(j)));
                 contadorDeLinha = contadorDeLinha +1;
             }
+            // */
         }
         System.out.println("Linhas lidas = " + contadorLinhasLidas);
         System.out.println("FIM SETAR CORES");
